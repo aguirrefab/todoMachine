@@ -1,9 +1,5 @@
 import { useState } from "react";
-import { TodoCounter } from "./components/TodoCounter";
-import { TodoSearch } from "./components/TodoSearch";
-import { TodoList } from "./components/TodoList";
-import { TodoItem } from "./components/TodoItem";
-import { CreateTodoButton } from "./components/CreateTodoButton";
+import { AppUi } from "./AppUi";
 
 const defaultTodo = [
   { text: "Cortar cebolla", completed: false },
@@ -34,7 +30,7 @@ function App() {
     
   }
 
-  const completeTodos = (text) => {
+  const completeTodo = (text) => {
     const todoIndex = todos.findIndex(todo => todo.text === text);
 
     const newTodos = [...todos];
@@ -43,25 +39,25 @@ function App() {
     setTodos(newTodos);
   }
 
+  const deleteTodo = (text) => {
+    const todoIndex = todos.findIndex(todo => todo.text === text);
+
+    const newTodos = [...todos];
+    newTodos.splice(todoIndex, 1)
+
+    setTodos(newTodos);
+  }
+
   return (
-    <>    
-      <TodoCounter
-        total={totalTodos}
-        completed={completedTodos} />
-      <TodoSearch
-        searchValue={searchValue}
-        setSearchValue={setSearchValue} />
-      <TodoList>
-        {searchedTodos.map(todo => (
-          <TodoItem
-            key={todo.text}
-            text={todo.text}
-            completed = {todo.completed} 
-            onComplete = {() => completeTodos(todo.text)}/>
-        ))}
-      </TodoList>
-      <CreateTodoButton />
-    </>
+    <AppUi
+      totalTodos = {totalTodos}
+      completedTodos = {completedTodos}
+      searchValue = {searchValue}
+      setSearchValue = {setSearchValue}
+      searchedTodos = {searchedTodos}
+      completeTodo = {completeTodo}
+      deleteTodo =  {deleteTodo}      
+      />    
   );
 }
 
