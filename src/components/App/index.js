@@ -2,11 +2,6 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { AppUi } from "./AppUi";
 
-//const defaultTodo = [
-//  { text: "Cortar cebolla", completed: false },
-//  { text: "Cortar pelo", completed: true },
-//  { text: "Terminar lo de adiunne", completed: true }
-// ];
 
 function useLocalStorage(itemName, initialValue){
   const [loading, setLoading] = useState(true);
