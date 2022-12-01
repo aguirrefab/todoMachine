@@ -7,20 +7,36 @@ import { AppUi } from "./AppUi";
 //  { text: "Terminar lo de adiunne", completed: true }
 // ];
 
-function App() {
+function useLocalStorage(itemName, initialValue){
+
+  const localStorageItem = localStorage.getItem(itemName)
+
+  let parsedItem;
   
-  const localStorageTodos = localStorage.getItem("TODOS_V1")
-
-  let parsedTodos;
-
-  if(!localStorageTodos){
-    localStorage.setItem("TODOS_V1", JSON.stringify([]));
-    parsedTodos = [];
+  if (!localStorageItem){
+    localStorage.setItem(itemName, JSON.stringify(initialValue));
+    parsedItem = [];
   } else {
-    parsedTodos = JSON.parse(localStorageTodos)
-  }
+    parsedItem = JSON.parse(localStorageItem)
+  };
+  
+  const [item, setItem] = useState(parsedItem);
 
-  const [todos, setTodos] = useState(parsedTodos);
+  const saveItemState = (newItem) => {
+    const stringifyItem = JSON.stringify(newItem);
+    localStorage.setItem("itemName", stringifyItem);
+    setItem(newItem);
+  };
+
+  return [
+    item,
+    saveItemState,
+  ];
+}
+
+function App() { 
+
+  const [todos, saveItemState] = useLocalStorage("TODOS_V1", []);
 
   const [searchValue, setSearchValue] = useState("");
 
@@ -38,13 +54,7 @@ function App() {
       
       return todoText.includes(searchText);
     })    
-  }
-
-  const saveTodosState = (newTodos) => {
-    const stringifyTodos = JSON.stringify(newTodos);
-    localStorage.setItem("TODOS_V1", stringifyTodos);
-    setTodos(newTodos);
-  };
+  }  
 
   const completeTodo = (text) => {
     const todoIndex = todos.findIndex(todo => todo.text === text);
@@ -52,7 +62,7 @@ function App() {
     const newTodos = [...todos];
     newTodos[todoIndex].completed=true;
 
-    saveTodosState(newTodos);
+    saveItemState(newTodos);
   }
 
   const deleteTodo = (text) => {
@@ -61,7 +71,7 @@ function App() {
     const newTodos = [...todos];
     newTodos.splice(todoIndex, 1)
 
-    saveTodosState(newTodos);
+    saveItemState(newTodos);
   }
 
   return (
